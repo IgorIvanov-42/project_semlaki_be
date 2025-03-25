@@ -32,10 +32,13 @@ public class TokenFilter extends GenericFilterBean {
             AuthInfo authInfo = service.mapClaimsToAuthInfo(claims);
             authInfo.setAuthenticated(true);
             SecurityContextHolder.getContext().setAuthentication(authInfo);
+
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
+
     }
+
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String token = request.getHeader("Authorization");

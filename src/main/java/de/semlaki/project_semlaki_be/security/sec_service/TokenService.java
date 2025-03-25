@@ -5,6 +5,7 @@ import de.semlaki.project_semlaki_be.repository.RoleRepository;
 import de.semlaki.project_semlaki_be.security.AuthInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +21,9 @@ import java.util.*;
 @Service
 public class TokenService {
 
-    private SecretKey accessKey;
-    private SecretKey refreshKey;
+    private SecretKey accessKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private SecretKey refreshKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
     private RoleRepository roleRepository;
 
     public TokenService(
