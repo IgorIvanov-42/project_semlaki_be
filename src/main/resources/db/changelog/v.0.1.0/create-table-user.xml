@@ -12,7 +12,7 @@
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="username" type="varchar(64)">
+            <column name="email" type="varchar(64)">
                 <constraints nullable="false" unique="true"/>
             </column>
 

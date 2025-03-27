@@ -1,8 +1,12 @@
 package de.semlaki.project_semlaki_be.controller;
 
-import de.semlaki.project_semlaki_be.domain.entity.User;
+import de.semlaki.project_semlaki_be.domain.dto.RegisterRequestDto;
+import de.semlaki.project_semlaki_be.domain.dto.UserResponseDto;
 import de.semlaki.project_semlaki_be.service.interfaces.UserService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/register")
@@ -15,9 +19,7 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String register(@RequestBody User user) {
-        service.register(user);
-//        return new Response("Регистрация успешна. Проверьте почту для подтверждения регистрации.");
-        return "Registered Successfully";
+    public UserResponseDto register(@RequestBody RegisterRequestDto user) {
+        return service.register(user);
     }
 }

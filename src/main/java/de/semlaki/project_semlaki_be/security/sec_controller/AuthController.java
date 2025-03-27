@@ -1,5 +1,6 @@
 package de.semlaki.project_semlaki_be.security.sec_controller;
 
+import de.semlaki.project_semlaki_be.security.sec_dto.LoginRequestDto;
 import de.semlaki.project_semlaki_be.security.sec_dto.RefreshRequestDto;
 import de.semlaki.project_semlaki_be.security.sec_service.AuthService;
 import de.semlaki.project_semlaki_be.domain.entity.User;
@@ -18,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public TokenResponseDto login(@RequestBody User user) throws AuthException {
+    public TokenResponseDto login(@RequestBody LoginRequestDto user) throws AuthException {
         return service.login(user);
     }
 
