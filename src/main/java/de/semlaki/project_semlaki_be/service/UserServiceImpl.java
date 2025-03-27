@@ -16,26 +16,26 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final BCryptPasswordEncoder encoder;
-//    private final RoleService roleService;
+    private final RoleService roleService;
 //    private final EmailService emailService;
 
-    public UserServiceImpl(UserRepository repository, BCryptPasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository repository, BCryptPasswordEncoder encoder, RoleService roleService) {
         this.repository = repository;
         this.encoder = encoder;
 //        this.roleService = roleService;
+        this.roleService = roleService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
+        return repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
     }
 
     @Override
     public void register(User user) {
         user.setId(null);
         user.setPassword(encoder.encode(user.getPassword()));
-
-//        user.setRoles(Set.of(roleService.getRoleUser()));
+        user.setRoles(Set.of(roleService.getUserRole()));
 
         repository.save(user);
 

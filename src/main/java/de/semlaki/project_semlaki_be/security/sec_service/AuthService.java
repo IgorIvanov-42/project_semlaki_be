@@ -28,7 +28,7 @@ public class AuthService {
     }
 
     public TokenResponseDto login(User inboundUser) throws AuthException {
-        String username = inboundUser.getUsername();
+        String username = inboundUser.getEmail();
         UserDetails foundUser = userService.loadUserByUsername(username);
 
         if (passwordEncoder.matches(inboundUser.getPassword(), foundUser.getPassword())) {

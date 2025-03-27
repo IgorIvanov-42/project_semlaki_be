@@ -76,7 +76,7 @@ public class Services {
     @Override
     public String toString() {
         return String.format("Services: id - %d, title - %s, user - %s, photo - %s, description - %s, category - %s",
-                id, title, user.getUsername(), photo, description, category.getTitle());
+                id, title, user.getEmail(), photo, description, category.getTitle());
     }
 }
 
