@@ -16,9 +16,17 @@ public class Categories {
     @Column(name = "title", nullable = false)
     private String title;
 
-    public Categories(Long id, String title) {
+    @Column(name = "photo")
+    private String photo;
+
+    @Column(name = "description")
+    private String description;
+
+    public Categories(Long id, String title, String photo, String description) {
         this.id = id;
         this.title = title;
+        this.photo = photo;
+        this.description = description;
     }
 
     public Categories() {
@@ -41,6 +49,22 @@ public class Categories {
         this.title = title;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -55,6 +79,14 @@ public class Categories {
 
     @Override
     public String toString() {
-        return String.format("Categories: id - %d, title - %s.", id, title);
+        final StringBuilder sb = new StringBuilder("Categories{");
+        sb.append("id=").append(id);
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", photo='").append(photo).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }
+
+
