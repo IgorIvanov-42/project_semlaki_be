@@ -12,4 +12,8 @@ public record RegisterRequestDto(
     public User from(){
         return new User(email, firstName, lastName, password);
     }
+
+    public String getEmail() {
+        return email;
+    }
 }

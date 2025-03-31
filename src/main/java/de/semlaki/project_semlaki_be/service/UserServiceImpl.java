@@ -35,10 +35,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto register(RegisterRequestDto user) {
+        // Проверяем, существует ли пользователь с таким email
+        if (repository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Пользователь с таким email уже существует");
+        }
+
+        // Создаем нового пользователя из DTO
         User registerdUser = user.from();
-        registerdUser.setPassword(encoder.encode(registerdUser.getPassword()));
+        registerdUser.setPassword(encoder.encode(registerdUser.getPassword())); // Хешируем пароль
         registerdUser.getRoles().add(roleService.getUserRole());
+
+        // Сохраняем пользователя в БД
         repository.save(registerdUser);
+
+        // Преобразуем в DTO и возвращаем
         return UserResponseDto.toDto(registerdUser);
     }
 }
