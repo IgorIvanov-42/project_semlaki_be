@@ -58,8 +58,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/services").permitAll()
-
+                        .requestMatchers(HttpMethod.GET, "/auth/profile").authenticated()
                         .requestMatchers("/auth/**")
+
                         .permitAll()
                         .anyRequest().authenticated()
                 ).addFilterAfter(tokenFilter, UsernamePasswordAuthenticationFilter.class)

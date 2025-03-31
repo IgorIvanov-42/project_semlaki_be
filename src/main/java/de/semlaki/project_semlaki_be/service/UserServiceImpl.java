@@ -5,6 +5,8 @@ import de.semlaki.project_semlaki_be.domain.dto.UserResponseDto;
 import de.semlaki.project_semlaki_be.domain.entity.User;
 import de.semlaki.project_semlaki_be.repository.UserRepository;
 import de.semlaki.project_semlaki_be.service.interfaces.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -50,5 +52,16 @@ public class UserServiceImpl implements UserService {
 
         // Преобразуем в DTO и возвращаем
         return UserResponseDto.toDto(registerdUser);
+    }
+
+
+    @Override
+    public UserResponseDto findCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
+
+        // Преобразуем в DTO и возвращаем
+        return UserResponseDto.toDto(user);
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
 
     UserResponseDto register(RegisterRequestDto user);
-
-
+    UserResponseDto findCurrentUser();
 
 }
