@@ -1,8 +1,12 @@
 package de.semlaki.project_semlaki_be.controller;
 
+import de.semlaki.project_semlaki_be.domain.dto.ServiceCreateRequestDto;
+import de.semlaki.project_semlaki_be.domain.dto.ServiceResponseDto;
 import de.semlaki.project_semlaki_be.domain.entity.Services;
 import de.semlaki.project_semlaki_be.service.ServicesService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,9 +43,11 @@ public class ServicesController {
         return ResponseEntity.ok(servicesService.getServicesByUser(userId));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<Services> createService(@RequestBody Services service) {
-        return ResponseEntity.ok(servicesService.createService(service));
+    public ResponseEntity<ServiceResponseDto> createService(@RequestBody ServiceCreateRequestDto createServiceDto,
+                                                            @AuthenticationPrincipal String userEmail) {
+        return ResponseEntity.ok(servicesService.createService(createServiceDto, userEmail));
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package de.semlaki.project_semlaki_be.security.sec_config;
 
+import de.semlaki.project_semlaki_be.exception.RestApiException;
 import de.semlaki.project_semlaki_be.security.sec_dto.ErrorResponse;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
@@ -16,5 +17,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-    // Можно добавить обработчики для других типов исключений
+    @ExceptionHandler(RestApiException.class)
+    public ResponseEntity<ErrorResponse> handleAuthException(RestApiException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+        return new ResponseEntity<>(errorResponse, ex.getStatus());
+    }
+
 }

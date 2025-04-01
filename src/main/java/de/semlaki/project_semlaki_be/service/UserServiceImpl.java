@@ -12,8 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -32,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
+        return findOrThrow(email);
     }
 
     @Override
@@ -59,9 +57,15 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto findCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        User user = repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
+        User user = findOrThrow(email);
 
         // Преобразуем в DTO и возвращаем
         return UserResponseDto.toDto(user);
+    }
+
+    @Override
+    public User findOrThrow(String userEmail) {
+        return repository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User " + userEmail + " not found"));
     }
 }

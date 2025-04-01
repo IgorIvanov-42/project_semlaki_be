@@ -2,7 +2,9 @@ package de.semlaki.project_semlaki_be.service;
 
 import de.semlaki.project_semlaki_be.domain.entity.Categories;
 
+import de.semlaki.project_semlaki_be.exception.RestApiException;
 import de.semlaki.project_semlaki_be.repository.CategoryRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,5 +33,10 @@ public class CategoriesService {
 
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    public Categories findOrThrow(long categoryId) {
+        return getCategoryById(categoryId)
+                .orElseThrow(() -> new RestApiException("Category not found", HttpStatus.NOT_FOUND));
     }
 }

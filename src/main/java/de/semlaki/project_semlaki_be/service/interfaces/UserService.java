@@ -10,4 +10,5 @@ public interface UserService extends UserDetailsService {
     UserResponseDto register(RegisterRequestDto user);
     UserResponseDto findCurrentUser();
 
+    User findOrThrow(String userEmail);
 }

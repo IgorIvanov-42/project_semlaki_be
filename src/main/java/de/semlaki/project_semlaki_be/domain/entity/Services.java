@@ -30,11 +30,9 @@ public class Services {
 
     public Services() {}
 
-    public Services(Long id, String title, User user, String photo, String description, Categories category) {
-        this.id = id;
+    public Services(String title, User user, String description, Categories category) {
         this.title = title;
         this.user = user;
-        this.photo = photo;
         this.description = description;
         this.category = category;
     }
