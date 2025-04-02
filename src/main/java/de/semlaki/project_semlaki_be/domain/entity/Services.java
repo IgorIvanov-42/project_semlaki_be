@@ -1,6 +1,7 @@
 package de.semlaki.project_semlaki_be.domain.entity;
 
 import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
@@ -26,34 +27,66 @@ public class Services {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    private Categories category; // 👈 Здесь должен быть объект Category
+    private Categories category;
 
-    public Services() {}
+    public Services() {
+    }
 
-    public Services(String title, User user, String description, Categories category) {
+    public Services(String title, User user, String description, String photo, Categories category) {
         this.title = title;
         this.user = user;
+        this.photo = photo;
         this.description = description;
         this.category = category;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public String getTitle() {
+        return title;
+    }
 
-    public String getPhoto() { return photo; }
-    public void setPhoto(String photo) { this.photo = photo; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public User getUser() {
+        return user;
+    }
 
-    public Categories getCategory() { return category; }
-    public void setCategory(Categories category) { this.category = category; }
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
 
     @Override
     public boolean equals(Object o) {
