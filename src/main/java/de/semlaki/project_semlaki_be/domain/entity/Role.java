@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Objects;
+
 @Entity
 @Table(name = "role")
 public class Role implements GrantedAuthority {
@@ -12,10 +13,14 @@ public class Role implements GrantedAuthority {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title", unique = true)
     private String title;
 
     public Role() {
+    }
+
+    public Role(String roleName) {
+        this.title = roleName;
     }
 
     public Long getId() {
@@ -38,7 +43,7 @@ public class Role implements GrantedAuthority {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return Objects.equals(id, role.id) && Objects.equals(title, role.title);
+        return Objects.equals(id, role.id);
     }
 
     @Override

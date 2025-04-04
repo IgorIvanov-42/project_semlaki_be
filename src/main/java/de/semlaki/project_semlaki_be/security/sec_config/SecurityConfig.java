@@ -1,6 +1,7 @@
 package de.semlaki.project_semlaki_be.security.sec_config;
 
 
+import de.semlaki.project_semlaki_be.security.sec_filter.TokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,12 +14,22 @@ import org.springframework.security.config.annotation.web.configurers.SessionMan
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final String ADMIN_ROLE = "ADMIN";
+    private final String USER_ROLE = "USER";
+    private final TokenFilter tokenFilter;
+
+
+    public SecurityConfig(TokenFilter tokenFilter) {
+        this.tokenFilter = tokenFilter;
+
+    }
     @Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -36,15 +47,27 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 // Включаем базовую авторизацию (при помощи логина и пароля)
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(AbstractHttpConfigurer::disable )
+
                 // При помощи этого метода мы конфигурируем доступ к разному функционалу
                 // приложения для разных ролей пользователей
                 .authorizeHttpRequests(x -> x
                         .requestMatchers(HttpMethod.GET, "/products/all").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/auth/health").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/services").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/services/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/services/category/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/profile").authenticated()
+                        .requestMatchers("/auth/**")
+
+                        .permitAll()
                         .anyRequest().authenticated()
-                        .requestMatchers("/auth/**").permitAll()
-                ).build();
+                ).addFilterAfter(tokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
