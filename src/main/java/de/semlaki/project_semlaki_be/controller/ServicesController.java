@@ -23,23 +23,43 @@ public class ServicesController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Services>> getAllServices() {
+    public ResponseEntity<List<ServiceResponseDto>> getAllServices() {
         return ResponseEntity.ok(servicesService.getAllServices());
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<List<ServiceResponseDto>> getRandomServices(
+            @RequestParam(value = "service_counter", required = false, defaultValue = "4")
+            int serviceCounter
+    ) {
+        return ResponseEntity.ok(servicesService.getRandomServices(serviceCounter));
+    }
+
+    // host/filter?term=car
+    @GetMapping("/filter")
+    public ResponseEntity<List<ServiceResponseDto>> getFilteredServices(
+            @RequestParam("term")
+            String term
+    ) {
+        return ResponseEntity.ok(servicesService.getServicesByTitle(term));
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Services> getServiceById(@PathVariable Long id) {
+    public ResponseEntity<ServiceResponseDto> getServiceById(@PathVariable Long id) {
         Optional<Services> service = servicesService.getServiceById(id);
-        return service.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return service
+                .map(ServiceResponseDto::toDto)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<Services>> getServicesByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<ServiceResponseDto>> getServicesByCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(servicesService.getServicesByCategory(categoryId));
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Services>> getServicesByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<ServiceResponseDto>> getServicesByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(servicesService.getServicesByUser(userId));
     }
 
