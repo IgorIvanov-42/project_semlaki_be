@@ -22,10 +22,8 @@ public class Categories {
     @Column(name = "description")
     private String description;
 
-    public Categories(Long id, String title, String photo, String description) {
-        this.id = id;
+    public Categories(String title, String description) {
         this.title = title;
-        this.photo = photo;
         this.description = description;
     }
 

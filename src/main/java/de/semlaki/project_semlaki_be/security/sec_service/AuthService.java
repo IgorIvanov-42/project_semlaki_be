@@ -1,6 +1,5 @@
 package de.semlaki.project_semlaki_be.security.sec_service;
 
-import de.semlaki.project_semlaki_be.domain.entity.User;
 import de.semlaki.project_semlaki_be.security.sec_dto.LoginRequestDto;
 import de.semlaki.project_semlaki_be.security.sec_dto.TokenResponseDto;
 import de.semlaki.project_semlaki_be.service.interfaces.UserService;
@@ -50,9 +49,9 @@ public class AuthService {
         if (foundRefreshToken != null && foundRefreshToken.equals(inboundRefreshToken)) {
             UserDetails foundUser = userService.loadUserByUsername(username);
             String accessToken = tokenService.generateAccessToken(foundUser);
-            return new TokenResponseDto(accessToken);
+            return new TokenResponseDto(accessToken, null);
         } else {
-            return new TokenResponseDto(null);
+            return new TokenResponseDto(null, null);
         }
     }
 }

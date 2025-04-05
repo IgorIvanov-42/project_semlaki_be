@@ -11,8 +11,8 @@ import java.util.Set;
 public class AuthInfo implements Authentication {
 
     private boolean authenticated;
-    private String username;
-    private Set<Role> roles;
+    private final String username;
+    private final Set<Role> roles;
 
     public AuthInfo(String username, Set<Role> roles) {
         this.username = username;

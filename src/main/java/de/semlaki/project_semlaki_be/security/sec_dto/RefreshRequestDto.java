@@ -1,33 +1,14 @@
 package de.semlaki.project_semlaki_be.security.sec_dto;
 
-import java.util.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 
-public class RefreshRequestDto {
-
-    private String refreshToken;
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        RefreshRequestDto that = (RefreshRequestDto) o;
-        return Objects.equals(refreshToken, that.refreshToken);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(refreshToken);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Refresh Request Dto: refresh token - %s.", refreshToken);
-    }
+/**
+ * DTO для запроса обновления токена.
+ */
+@Schema(description = "DTO для запроса обновления токена")
+public record RefreshRequestDto(
+        @Schema(description = "Refresh token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+        @NotBlank(message = "Refresh token must not be blank")
+        String refreshToken) {
 }
