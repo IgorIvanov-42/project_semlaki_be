@@ -1,14 +1,15 @@
 package de.semlaki.project_semlaki_be.service;
 
+import de.semlaki.project_semlaki_be.domain.dto.CategoryCreateDto;
+import de.semlaki.project_semlaki_be.domain.dto.CategoryResponseDto;
 import de.semlaki.project_semlaki_be.domain.entity.Categories;
-
 import de.semlaki.project_semlaki_be.exception.RestApiException;
 import de.semlaki.project_semlaki_be.repository.CategoryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoriesService {
@@ -19,24 +20,31 @@ public class CategoriesService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Categories> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponseDto> getAllCategories() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(CategoryResponseDto::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Categories> getCategoryById(Long id) {
-        return categoryRepository.findById(id);
+    public CategoryResponseDto createCategory(CategoryCreateDto category) {
+        Categories newCategory = category.toEntity();
+        return CategoryResponseDto.toDto(categoryRepository.save(newCategory));
     }
 
-    public Categories createCategory(Categories categories) {
-        return categoryRepository.save(categories);
+    public CategoryResponseDto deleteCategory(Long id) {
+        Categories foundCategory = findOrThrow(id);
+        categoryRepository.delete(foundCategory);
+        return CategoryResponseDto.toDto(foundCategory);
     }
 
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
+    public CategoryResponseDto getCategoryById(Long categoryId) {
+        Categories foundCategory = findOrThrow(categoryId);
+        return CategoryResponseDto.toDto(foundCategory);
     }
 
     public Categories findOrThrow(long categoryId) {
-        return getCategoryById(categoryId)
+        return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RestApiException("Category not found", HttpStatus.NOT_FOUND));
     }
 }

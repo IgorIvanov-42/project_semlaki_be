@@ -3,8 +3,10 @@ package de.semlaki.project_semlaki_be.service;
 import de.semlaki.project_semlaki_be.domain.dto.RegisterRequestDto;
 import de.semlaki.project_semlaki_be.domain.dto.UserResponseDto;
 import de.semlaki.project_semlaki_be.domain.entity.User;
+import de.semlaki.project_semlaki_be.exception.RestApiException;
 import de.semlaki.project_semlaki_be.repository.UserRepository;
 import de.semlaki.project_semlaki_be.service.interfaces.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,13 +38,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto register(RegisterRequestDto user) {
         // Проверяем, существует ли пользователь с таким email
-        if (repository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Пользователь с таким email уже существует");
+        String normalizedEmail = user.email().toLowerCase().trim();
+        if (repository.existsByEmail(normalizedEmail)) {
+            throw new RestApiException("Пользователь с таким email уже существует", HttpStatus.CONFLICT);
         }
 
         // Создаем нового пользователя из DTO
         User registerdUser = user.from();
-        registerdUser.setPassword(encoder.encode(registerdUser.getPassword())); // Хешируем пароль
+        registerdUser.setEmail(normalizedEmail);
+        registerdUser.setPassword(encoder.encode(registerdUser.getPassword()));
         registerdUser.getRoles().add(roleService.getUserRole());
 
         // Сохраняем пользователя в БД
@@ -66,6 +70,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findOrThrow(String userEmail) {
         return repository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User " + userEmail + " not found"));
+                .orElseThrow(() -> new RestApiException("User " + userEmail + " not found", HttpStatus.NOT_FOUND));
     }
 }

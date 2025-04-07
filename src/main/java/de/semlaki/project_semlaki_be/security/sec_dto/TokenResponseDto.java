@@ -1,43 +1,14 @@
 package de.semlaki.project_semlaki_be.security.sec_dto;
 
-import java.util.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-public class TokenResponseDto {
-
-    private String accessToken;
-    private String refreshToken;
-
-    public TokenResponseDto(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public TokenResponseDto(String accessToken, String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        TokenResponseDto that = (TokenResponseDto) o;
-        return Objects.equals(accessToken, that.accessToken) && Objects.equals(refreshToken, that.refreshToken);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(accessToken, refreshToken);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Token Response Dto: access token - %s, refresh token - %s", accessToken, refreshToken);
-    }
+/**
+ * DTO для ответа с токенами.
+ */
+@Schema(description = "DTO для ответа с токенами")
+public record TokenResponseDto(
+        @Schema(description = "Access token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+        String accessToken,
+        @Schema(description = "Refresh token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+        String refreshToken) {
 }
