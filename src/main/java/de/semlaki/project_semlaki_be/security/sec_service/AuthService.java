@@ -1,6 +1,6 @@
 package de.semlaki.project_semlaki_be.security.sec_service;
 
-import de.semlaki.project_semlaki_be.domain.entity.User;
+import de.semlaki.project_semlaki_be.security.sec_dto.LoginRequestDto;
 import de.semlaki.project_semlaki_be.security.sec_dto.TokenResponseDto;
 import de.semlaki.project_semlaki_be.service.interfaces.UserService;
 import io.jsonwebtoken.Claims;
@@ -27,11 +27,11 @@ public class AuthService {
         this.refreshStorage = new HashMap<>();
     }
 
-    public TokenResponseDto login(User inboundUser) throws AuthException {
-        String username = inboundUser.getUsername();
+    public TokenResponseDto login(LoginRequestDto inboundUser) throws AuthException {
+        String username = inboundUser.email();
         UserDetails foundUser = userService.loadUserByUsername(username);
 
-        if (passwordEncoder.matches(inboundUser.getPassword(), foundUser.getPassword())) {
+        if (passwordEncoder.matches(inboundUser.password(), foundUser.getPassword())) {
             String accessToken = tokenService.generateAccessToken(foundUser);
             String refreshToken = tokenService.generateRefreshToken(foundUser);
             refreshStorage.put(username, refreshToken);
@@ -49,9 +49,9 @@ public class AuthService {
         if (foundRefreshToken != null && foundRefreshToken.equals(inboundRefreshToken)) {
             UserDetails foundUser = userService.loadUserByUsername(username);
             String accessToken = tokenService.generateAccessToken(foundUser);
-            return new TokenResponseDto(accessToken);
+            return new TokenResponseDto(accessToken, null);
         } else {
-            return new TokenResponseDto(null);
+            return new TokenResponseDto(null, null);
         }
     }
 }
